@@ -21,7 +21,7 @@ def lambda_handler(event, context):
         return "Exception! Failed with: {0}".format(e)
 
     client = boto3.client('ec2', region_name = AWS_REGION)
-    response = client.describe_instance_credit_specifications(InstanceIds=INSTANCE_ID)
+    response = client.describe_instance_credit_specifications(InstanceIds=[INSTANCE_ID])
     credit_type = response['InstanceCreditSpecifications'][0]['CpuCredits']
     if credit_type == 'standard':
         print "Unlimited disabled"
