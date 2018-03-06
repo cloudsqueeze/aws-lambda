@@ -10,7 +10,8 @@ Deploy the application and specify threshold, instance id and region.
 Since AWS SAM does not support custom IAM policies you will need to create an Inline policy and attach it to the role that is being used by lambda.
 Policy should contain:
 
-`{
+```
+{
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -25,8 +26,8 @@ Policy should contain:
             "Resource": "*"
         }
     ]
-}`
-
+}
+```
 
 
 ## License
