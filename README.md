@@ -1,6 +1,6 @@
-# Trigger Lambda that enables T2 unlimited when CPUCreditBalance is below a threshold 
+# T2 unlimited lambda
 
-Enable T2 unlimited in case CPUCredits hit a specific threshold.
+Trigger Lambda that enables T2 unlimited when CPUCreditBalance is below a threshold 
 Lambda is invoked by SNS triggered Alarm
 
 # How to use
