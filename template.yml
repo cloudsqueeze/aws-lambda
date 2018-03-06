@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An Amazon SNS trigger that enabled T2 unlimited based on CPU usage
+
+Parameters:
+  InstanceId:
+    Type: String
+    Description: InstanceId to monitor
+  Threshold:
+    Description: Set the CPUCredits threshold
+    Type: String
+    Default: "50"
+
+
+Resources:
+  cloudwatchalarmsnslambdainvoke:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Runtime: python2.7
+      CodeUri: .
+      Description: >-
+        An Amazon SNS trigger that enabled T2 unlimited based on CPU usage
+      MemorySize: 128
+      Timeout: 3
+
+      Environment:
+        Variables:
+          INSTANCE_ID: !Ref InstanceId
+          THRESHOLD: !Ref Threshold
+      Events:
+        SNS1:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: SNSTopic1
+  CPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: CPU alarm for my instance
+      AlarmActions:
+      - Ref: SNSTopic1
+      MetricName: CPUCreditBalance
+      Namespace: AWS/EC2
+      Statistic: Average
+      Period: '60'
+      EvaluationPeriods: '3'
+      Threshold: !Ref Threshold
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: InstanceId
+        Value:
+          Ref: InstanceId
+
+  SNSTopic1:
+    Type: 'AWS::SNS::Topic'
