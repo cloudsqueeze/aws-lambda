@@ -15,11 +15,6 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
 
-    try:
-        instance = event.get('instance')
-    except Exception as e:
-        return "Exception! Failed with: {0}".format(e)
-
     client = boto3.client('ec2', region_name = AWS_REGION)
     response = client.describe_instance_credit_specifications(InstanceIds=[INSTANCE_ID])
     credit_type = response['InstanceCreditSpecifications'][0]['CpuCredits']
@@ -33,7 +28,7 @@ def lambda_handler(event, context):
         Dimensions=[
             {
                 "Name": "InstanceId",
-                "Value": instance
+                "Value": INSTANCE_ID
             }
         ],
         StartTime=datetime.utcnow() - timedelta(seconds=CLOUDWATCH_PERIOD),
@@ -48,7 +43,7 @@ def lambda_handler(event, context):
             DryRun=False,
             InstanceCreditSpecifications=[
             {
-                'InstanceId': instance,
+                'InstanceId': INSTANCE_ID,
                 'CpuCredits': 'unlimited'
             },
             ]
@@ -59,7 +54,7 @@ def lambda_handler(event, context):
             DryRun=False,
             InstanceCreditSpecifications=[
                 {
-                    'InstanceId': instance,
+                    'InstanceId': INSTANCE_ID,
                     'CpuCredits': 'standard'
                 },
             ]

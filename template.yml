@@ -27,15 +27,7 @@ Resources:
         An Amazon SNS trigger that enabled T2 unlimited based on CPU usage
       MemorySize: 128
       Timeout: 3
-      Policies:
-        - Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Action:
-                - ec2:DescribeInstanceCreditSpecifications
-                - ec2:ModifyInstanceCreditSpecification
-                - cloudwatch:GetMetricStatistics
-              Resource: "*"
+
       Environment:
         Variables:
           INSTANCE_ID: !Ref InstanceId
@@ -59,7 +51,7 @@ Resources:
       Period: '60'
       EvaluationPeriods: '3'
       Threshold: !Ref Threshold
-      ComparisonOperator: GreaterThanThreshold
+      ComparisonOperator: LessThanThreshold
       Dimensions:
       - Name: InstanceId
         Value:
